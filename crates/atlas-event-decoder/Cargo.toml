@@ -1,11 +1,12 @@
 [package]
 name = "nocturne-atlas-event-decoder"
-version = "0.3.0"
+version = "0.3.1"
 description = "Host decoder for Atlas events. Dispatch is contract identity plus topic. Version comes from the deployment record."
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
+readme = "README.md"
 publish = true
 
 [dependencies]

@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### atlas 0.6.0 / atlas-encoding 0.5.0 / atlas-event-decoder 0.3.0
+### atlas 0.6.0 / atlas-encoding 0.5.0 / atlas-event-decoder 0.3.1
+
+- `atlas-event-decoder` 0.3.1 adds a README and `readme` metadata to the crate. No code change from 0.3.0, which is on crates.io without a README.
 
 - `pending_cancelled` carries `execute_at`, the height the withdrawn change would have applied at. The 0.4.0 encoding payload was the change only. The decoder keeps that older layout for records before 0.6.0.
 - `set_service` panics `service unchanged` when the name already stores that id, and does not emit. A different id under the same name still updates.
