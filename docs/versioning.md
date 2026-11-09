@@ -9,7 +9,7 @@ Each workspace crate carries its own `version` in `Cargo.toml`:
 
 | Package | Rust path / WASM | Version | Published |
 |---|---|---|---|
-| `nocturne-atlas-encoding` | `atlas_encoding` | 0.5.0 | git only for now (`publish = false`); crates.io planned, see `RELEASE-PENDING.md` |
+| `nocturne-atlas-encoding` | `atlas_encoding` | 0.5.0 | crates.io, from 0.5.0 |
 | `nocturne-atlas` | `atlas`, `atlas.wasm` | 0.6.0 | never (`publish = false`, deployed as WASM) |
 | `nocturne-atlas-event-decoder` | `atlas_event_decoder` | 0.3.0 | not yet (`publish = false`; host library) |
 | `nocturne-atlas-test-proxy` | `atlas_test_proxy`, `atlas_test_proxy.wasm` | 0.3.0 | never (`publish = false`, test fixture) |
@@ -27,26 +27,22 @@ The crate version is the source of truth for that crate's API and, for
 `atlas-encoding` bump does not force an `atlas` bump unless the contract
 actually changed.
 
-## Git tag or rev
+## Depending on `atlas-encoding`
 
-Consumers pin `atlas-encoding` via git, by full commit:
+`nocturne-atlas-encoding` is on crates.io:
 
 ```toml
-atlas-encoding = { git = "https://github.com/Nocturne-Standards/atlas", rev = "<40-hex commit>", package = "nocturne-atlas-encoding" }
+atlas-encoding = { package = "nocturne-atlas-encoding", version = "0.5" }
 ```
 
-Tags are not signed and can be moved, and a fresh resolution follows the tag,
-so `rev` is the pin; a tag only names a commit. The tree is `atlas` 0.6.0
-and requires `dusk-core =1.7.0`. `atlas-encoding` 0.5.0 adds `execute_at` to
-`PendingCancelled`. 0.4.0 added `GuardianAccepted` and kept every 0.3.0
-layout. Older tags are history and
-pin older `dusk-core` versions. Sign release tags (`git tag -s`) and
-protect `v*` tags once the repository is transferred. See
-[`docs/consumers.md`](consumers.md) for what to verify before pinning an id.
-A repo tag is an operator-chosen bundle of crate versions at a
-point in time; check the tag's `Cargo.toml` files for the exact crate
-versions you are building against. When `atlas-encoding` reaches crates.io
-the git line becomes a plain version requirement.
+The tree is `atlas` 0.6.0 and requires `dusk-core =1.7.0`. `atlas-encoding`
+0.5.0 adds `execute_at` to `PendingCancelled`. 0.4.0 added `GuardianAccepted`
+and kept every 0.3.0 layout. Older versions pin older `dusk-core` versions.
+A crate version is not a contract id: see [`docs/consumers.md`](consumers.md)
+for what to verify before pinning an id. A repo tag is an operator-chosen
+bundle of crate versions at a point in time; check the tag's `Cargo.toml`
+files for the exact versions. Sign release tags (`git tag -s`) and protect
+`v*` tags.
 
 ## Toolchain pin
 
@@ -74,16 +70,6 @@ produced the same hash. Deploy the `atlas-wasm` artifact from the CI
 `release-wasm` job, or run the script on the release commit, and record that
 hash. Source paths in the binary are remapped (Cargo home, sysroot, workspace
 root) so the path of the build does not matter.
-
-## Dependency patch
-
-The root `Cargo.toml` has `[patch."https://github.com/dusk-network/rusk"]`
-redirecting `dusk-core` to the registry at `=1.7.0`. knot-encoding at rev
-`f391c92` (our pin: knot main after the v0.3.0 release prep) still names the rusk git source, so without
-the patch the graph would hold two `dusk-core` versions. Consumers that pin
-`atlas-encoding` by git tag and `knot-encoding` by `v0.2.0` need the same patch
-until knot releases an encoding crate against dusk-core 1.7.0. The patch is not
-part of any crate version.
 
 ## PINNED-DIFFERENT-REDEPLOYED
 

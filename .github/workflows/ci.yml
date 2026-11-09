@@ -20,7 +20,7 @@ jobs:
       - run: cargo fmt --all --check
       # Contract WASM first: host tests include_bytes! the artifacts, and
       # `make knot-wasm` clones public Nocturne-Standards/knot at the
-      # Cargo.lock-pinned rev to build the knot registry, proposals and data WASM.
+      # KNOT_REV (Makefile) to build the knot registry, proposals and data WASM.
       - run: make wasm
       - run: make clippy
       - run: make test

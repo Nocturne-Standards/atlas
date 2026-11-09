@@ -22,7 +22,7 @@ make test
 `make test` builds `atlas.wasm` and `atlas_test_proxy.wasm`, then runs
 `make knot-wasm`, which clones
 [Nocturne-Standards/knot](https://github.com/Nocturne-Standards/knot) at the
-rev pinned in `Cargo.lock` under `target/knot-src` and builds
+commit named by `KNOT_REV` in the `Makefile` under `target/knot-src` and builds
 `knot_registry.wasm`, `knot_proposals.wasm` and their two data contracts for the end-to-end test.
 Deploy builds use `make release-wasm` (needs `wasm-opt` from binaryen version
 116; prints the `wasm_sha256`) on Linux. On a Mac run

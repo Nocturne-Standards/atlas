@@ -84,28 +84,19 @@ scheduler can repoint a name after the delay and nothing inside Atlas stops it.
 Watch `service_scheduled` (warden) and `pending_scheduled` (Atlas) for the
 instance you pin, and be ready to repin.
 
-## Pin `atlas-encoding` by commit
+## Depend on `atlas-encoding`
 
-Use `rev` with the full 40-hex commit, not a tag. Tags in this repository are
-not signed and a tag can be moved; a fresh dependency resolution follows the
-tag.
+Use the crates.io release:
 
 ```toml
-atlas-encoding = { git = "https://github.com/Nocturne-Standards/atlas", rev = "<40-hex commit>", package = "nocturne-atlas-encoding" }
+atlas-encoding = { package = "nocturne-atlas-encoding", version = "0.5" }
 ```
 
 `atlas-encoding` pins exact versions of `dusk-core`, `rkyv` and `bytecheck`,
-because the archived layouts depend on them. Check the pins at the commit you
-choose: the 0.4.1 tree needs `dusk-core =1.7.0`; older tags pin older
-versions. If you also pin `knot-encoding` at tag `v0.2.0`, that crate still
-names the rusk git source for `dusk-core`; add the same redirect this
-repository uses to your own workspace `Cargo.toml` (a `[patch]` in a
-dependency's manifest is ignored):
-
-```toml
-[patch."https://github.com/dusk-network/rusk"]
-dusk-core = { version = "=1.7.0" }
-```
+because the archived layouts depend on them. Check the pins of the version you
+choose: 0.5.x needs `dusk-core =1.7.0`. Knot's encoding crate,
+`nocturne-knot-encoding`, also takes `dusk-core` from the registry, so no
+`[patch]` is needed when you use both.
 
 ## Keys
 

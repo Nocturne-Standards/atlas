@@ -8,11 +8,10 @@ WASM_TARGET := wasm32-unknown-unknown
 # -----------------------------------------------------------------------------
 
 KNOT_REPO ?= https://github.com/Nocturne-Standards/knot.git
-# Rev comes from the knot-encoding pin in Cargo.lock; override with KNOT_REV=.
-# The `#` before the SHA is backslash-escaped: unescaped, make would read the
-# rest of the line as a comment and never close the $(shell ...) call.
-KNOT_REV_SED := sed -n 's|^source = "git+https://github.com/Nocturne-Standards/knot?[^\#]*\#\([0-9a-f]\{40\}\)".*|\1|p'
-KNOT_REV ?= $(shell $(KNOT_REV_SED) $(CURDIR)/Cargo.lock | head -n1)
+# Knot commit whose registry, proposals and data contracts the e2e suite builds.
+# It is the commit nocturne-knot-encoding 0.1.x was published from; keep the two
+# in step. Override with KNOT_REV=.
+KNOT_REV ?= 3ebcbf0db9b161180592c74159bfa5b71b705931
 KNOT_SRC := $(CURDIR)/target/knot-src
 KNOT_REGISTRY_WASM := $(KNOT_SRC)/target/contract/$(WASM_TARGET)/release/knot_registry.wasm
 KNOT_PROPOSALS_WASM := $(KNOT_SRC)/target/contract/$(WASM_TARGET)/release/knot_proposals.wasm
@@ -23,9 +22,9 @@ KNOT_REGISTRY_DATA_WASM := $(KNOT_SRC)/target/contract/$(WASM_TARGET)/release/kn
 KNOT_PROPOSALS_DATA_WASM := $(KNOT_SRC)/target/contract/$(WASM_TARGET)/release/knot_proposals_data.wasm
 
 .PHONY: knot-wasm
-knot-wasm: ## Clone knot @ KNOT_REV (from Cargo.lock unless overridden) and build registry, proposals and their data contracts as WASM
+knot-wasm: ## Clone knot @ KNOT_REV and build registry, proposals and their data contracts as WASM
 	@if [ -z "$(KNOT_REV)" ]; then \
-		echo "Error: KNOT_REV empty — pin knot-encoding in Cargo.lock or pass KNOT_REV="; \
+		echo "Error: KNOT_REV empty"; \
 		exit 1; \
 	fi
 	@if [ ! -d "$(KNOT_SRC)/.git" ]; then \
