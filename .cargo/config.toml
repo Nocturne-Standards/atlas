@@ -1,0 +1,6 @@
+# macOS dev builds default to split-debuginfo = "unpacked": every build leaves
+# new .rcgu.o files in target/debug/deps and cargo never removes the old ones,
+# so target/ dirs grew to 16-31 GB. "off" keeps full debug info inside the
+# binary (debuggers still work) and leaves no .o files behind.
+[profile.dev]
+split-debuginfo = "off"

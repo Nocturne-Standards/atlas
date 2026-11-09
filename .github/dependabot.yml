@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # dusk-*, rkyv, bytecheck, and rand are wire-format pins: the layout
+    # goldens in crates/atlas-encoding/tests/layout_goldens.rs were produced
+    # against these exact versions, and test keys come from
+    # StdRng::seed_from_u64 on the rand_core 0.6 that dusk-core uses. A bump
+    # is a PINNED-DIFFERENT-REDEPLOYED release, not a routine dependency
+    # update. Bump them by hand with the goldens re-run.
+    ignore:
+      - dependency-name: "dusk-*"
+      - dependency-name: "rkyv"
+      - dependency-name: "bytecheck"
+      - dependency-name: "rand"
+    groups:
+      workspace:
+        patterns:
+          - "*"
+
+  # @dusk-network/networks is pinned exactly; a bump is reviewed by hand.
+  - package-ecosystem: npm
+    directory: "/tools/atlas-js"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: gitsubmodule
+    directory: "/"
+    schedule:
+      interval: weekly

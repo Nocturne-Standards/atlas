@@ -1,0 +1,58 @@
+[package]
+name = "nocturne-atlas"
+version = "0.6.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Per-project service registry and guardian for native contracts."
+repository.workspace = true
+publish = false
+
+[dependencies]
+atlas-encoding = { package = "nocturne-atlas-encoding", path = "../atlas-encoding", version = "0.5.0", features = ["contract-events"] }
+dusk-bls12_381 = { version = "=0.14.2", default-features = false, optional = true }
+rkyv = { version = "=0.7.46", default-features = false, features = ["size_32"] }
+bytecheck = { version = "=0.6.12", default-features = false }
+serde = { version = "1", default-features = false, features = ["derive"], optional = true }
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+dusk-core = { version = "=1.7.0" }
+dusk-data-driver = { version = "0.3", optional = true }
+dusk-forge = "0.3.0"
+dusk-bytes = "=0.1.7"
+
+[dev-dependencies]
+dusk-core = { version = "=1.7.0", features = ["zk"] }
+dusk-vm = { version = "=1.7.0", default-features = false }
+dusk-bytes = "=0.1.7"
+bytecheck = { version = "=0.6.12", default-features = false }
+rand = { version = "0.8.6", default-features = false }
+rkyv = { version = "=0.7.46", default-features = false, features = ["size_32", "validation"] }
+# Host-side e2e (tests/e2e_multisig.rs) needs knot proposal call types; not
+# linked into the Atlas contract WASM.
+knot-encoding = { git = "https://github.com/Nocturne-Standards/knot", rev = "f391c92e791142a9cc59be16d1d027836eb161cc", package = "knot-encoding", features = ["call-types"] }
+
+[features]
+contract = ["dusk-core/abi-dlmalloc"]
+
+data-driver = [
+  "atlas-encoding/data-driver",
+  "dusk-core/serde",
+  "dep:dusk-data-driver",
+  "dusk-data-driver/wasm-export",
+  "dep:serde",
+  "dep:dusk-bls12_381",
+  "dusk-bls12_381/serde",
+]
+
+data-driver-js = ["data-driver", "dusk-data-driver/alloc"]
+
+[lib]
+# Package is published as nocturne-atlas; the Rust path and the built file keep the short name.
+name = "atlas"
+crate-type = ["cdylib", "rlib"]
+
+# Both are enabled only through the `data-driver` feature to switch on serde
+# support in dependencies. The data-driver WASM differs without them.
+[package.metadata.cargo-machete]
+ignored = ["dusk-bls12_381", "serde"]

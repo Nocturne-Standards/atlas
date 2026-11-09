@@ -1,0 +1,8 @@
+# Substrings that neutralize a public-surface hit (a reported line containing
+# any of these is ignored). Keep this list short; fix product text instead of
+# adding entries. Credentials and private key blocks are never allowlisted in
+# practice: fix the file.
+
+# Container home in the reproducible-build script. It mirrors the CI runner
+# path inside a throwaway container; it is not a local machine path.
+export HOME=/home/runner

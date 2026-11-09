@@ -1,0 +1,21 @@
+# Build artifacts
+/target/
+# JS side tools
+node_modules/
+
+# Linked worktrees
+/.worktrees/
+
+# Local agent and editor state. Not part of the public tree.
+.claude/
+.claudeignore
+.cursor/
+.superpowers/
+AGENTS.md
+CLAUDE.md
+FIELD_GUIDE/
+
+# Local secrets and OS files never belong in the tree.
+.env
+.env.*
+.DS_Store

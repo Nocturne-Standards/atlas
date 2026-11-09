@@ -1,0 +1,24 @@
+# Leak gates for the public repository. The job name `kit-gates` is the
+# branch-protection context. ALLOW_PRIVATE_TIER must stay unset here.
+name: kit-gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  kit-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Public marker present
+        run: test -f .nocturne-public
+
+      - name: Public-surface leak gate
+        run: scripts/check-public-surface.sh

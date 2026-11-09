@@ -1,0 +1,23 @@
+# Contract authorization baseline.
+#
+# One line per exported contract method. After each, state who may call it.
+# Reviewed entries look like:
+#   crates/x/src/state.rs:debit    owner-allowlisted settlement contracts only
+#   crates/x/src/state.rs:get_info PUBLIC — read-only, leaks no session data
+#
+crates/atlas-test-proxy/src/lib.rs:call_accept_guardian	TEST-ONLY — never deployed; cross-calls Atlas accept_guardian so abi::caller() is this contract
+crates/atlas-test-proxy/src/lib.rs:call_init_guardian	TEST-ONLY — never deployed; cross-calls Atlas init_guardian so abi::caller() is this contract
+crates/atlas-test-proxy/src/lib.rs:call_set_service	TEST-ONLY — never deployed; cross-calls Atlas set_service so abi::caller() is this contract
+crates/atlas-test-proxy/src/lib.rs:relay	TEST-ONLY — never deployed; forwards raw call bytes to any contract for anyone, to rebuild the contract_to_contract call stack in tests
+crates/atlas/src/state.rs:accept_guardian	incoming guardian only (require_account on the pending guardian change: direct call from the key, or caller == contract id); emits guardian_accepted; applies the change if the delay has passed
+crates/atlas/src/state.rs:cancel_pending	guardian immediate (require_guardian: external direct public_sender, or caller == contract guardian)
+crates/atlas/src/state.rs:execute_pending	PUBLIC — permissionless once block_height >= execute_at; applies only the already-authorized pending change
+crates/atlas/src/state.rs:guardian	PUBLIC — read-only view
+crates/atlas/src/state.rs:init_guardian	deploy owner only (require_deploy_owner), direct call, once — panics if already initialized
+crates/atlas/src/state.rs:pending	PUBLIC — read-only view
+crates/atlas/src/state.rs:pending_accepted	PUBLIC — read-only view
+crates/atlas/src/state.rs:resolve	PUBLIC — read-only view
+crates/atlas/src/state.rs:set_guardian	guardian timelocked (require_guardian then schedule; applied by execute_pending once the delay has passed AND the incoming guardian has called accept_guardian)
+crates/atlas/src/state.rs:set_service	guardian immediate (require_guardian)
+crates/atlas/src/state.rs:set_timelock	guardian timelocked (require_guardian then schedule; applied by execute_pending)
+crates/atlas/src/state.rs:timelock_blocks	PUBLIC — read-only view

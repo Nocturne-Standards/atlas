@@ -1,0 +1,46 @@
+---
+name: Feature request
+description: Suggest an improvement or new capability
+title: "[feat]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What are you trying to accomplish?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like this to work?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Likely scope
+      options:
+        - atlas (contract surface or authority rules)
+        - atlas-encoding (call types, events, layout)
+        - evm/src (EvmAtlas, EvmWarden)
+        - evm/script (deploy.sh, drift.sh, diff-pin.sh)
+        - scripts/ (check-bls-insecure.sh)
+        - Tests / atlas-test-proxy (test-only crate)
+        - Documentation
+        - CI / packaging
+        - Unsure
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contracts
+    attributes:
+      label: Contract impact
+      options:
+        - label: This would change the ABI, an event payload, or an authority rule (redeploy + consumer rebuild)
+          required: false
