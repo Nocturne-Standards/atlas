@@ -30,7 +30,7 @@ rand = { version = "0.8.6", default-features = false }
 rkyv = { version = "=0.7.46", default-features = false, features = ["size_32", "validation"] }
 # Host-side e2e (tests/e2e_multisig.rs) needs knot proposal call types; not
 # linked into the Atlas contract WASM.
-knot-encoding = { git = "https://github.com/Nocturne-Standards/knot", rev = "f391c92e791142a9cc59be16d1d027836eb161cc", package = "knot-encoding", features = ["call-types"] }
+knot-encoding = { package = "nocturne-knot-encoding", version = "0.1", features = ["call-types"] }
 
 [features]
 contract = ["dusk-core/abi-dlmalloc"]

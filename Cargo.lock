@@ -1530,18 +1530,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "knot-encoding"
-version = "0.1.2"
-source = "git+https://github.com/Nocturne-Standards/knot?rev=f391c92e791142a9cc59be16d1d027836eb161cc#f391c92e791142a9cc59be16d1d027836eb161cc"
-dependencies = [
- "bytecheck",
- "dusk-core",
- "rkyv",
- "sha2 0.10.9",
- "tiny-keccak",
-]
-
-[[package]]
 name = "libc"
 version = "0.2.189"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1667,8 +1655,8 @@ dependencies = [
  "dusk-data-driver",
  "dusk-forge",
  "dusk-vm",
- "knot-encoding",
  "nocturne-atlas-encoding",
+ "nocturne-knot-encoding",
  "rand 0.8.7",
  "rkyv",
  "serde",
@@ -1707,6 +1695,19 @@ dependencies = [
  "dusk-core",
  "dusk-forge",
  "nocturne-atlas-encoding",
+]
+
+[[package]]
+name = "nocturne-knot-encoding"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0343761d1c4a8c2984d4eb60badc67fb43afb576009743938b36f3c29be31d68"
+dependencies = [
+ "bytecheck",
+ "dusk-core",
+ "rkyv",
+ "sha2 0.10.9",
+ "tiny-keccak",
 ]
 
 [[package]]

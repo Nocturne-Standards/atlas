@@ -15,9 +15,3 @@ repository = "https://github.com/Nocturne-Standards/atlas"
 opt-level = "z"
 lto = true
 codegen-units = 1
-
-# knot-encoding (rev f391c92, the dev-dependency pin in crates/atlas) still
-# names the rusk git source for dusk-core.
-# Redirect that source to the registry so the graph has one dusk-core 1.7.0.
-[patch."https://github.com/dusk-network/rusk"]
-dusk-core = { version = "=1.7.0" }

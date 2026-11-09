@@ -1,7 +1,7 @@
 # Release pending
 
-Status: **nothing published**. Every crate in this workspace is
-`publish = false`. This file is the plan for the crates.io step and the list
+Status: **`nocturne-atlas-encoding` 0.5.0 is published** (2026-11-09). The
+other crates are `publish = false`. This file is the plan for the crates.io step and the list
 to decide on before it. Nothing here is a chain step; contract ids stay in
 `CHANGELOG.md` and the public deployments record.
 
