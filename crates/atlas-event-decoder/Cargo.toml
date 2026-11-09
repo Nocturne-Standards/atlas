@@ -6,7 +6,7 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
-publish = false
+publish = true
 
 [dependencies]
 atlas-encoding = { package = "nocturne-atlas-encoding", path = "../atlas-encoding", version = "0.5.0", features = ["data-driver"] }
