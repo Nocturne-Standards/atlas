@@ -1,0 +1,10 @@
+# Paths where *_insecure BLS helpers may appear.
+# One glob per line (repo-root relative). Blank lines and # comments ignored.
+#
+# Production code uses only sign / verify / sign_multisig / aggregate.
+# *_insecure is allowed only on the test paths below, and each hit file must
+# carry a comment that names PreforkHostQuery, or the words "insecure BLS test".
+**/tests/**
+**/*_tests.rs
+**/tests.rs
+**/layout_goldens.rs

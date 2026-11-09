@@ -1,0 +1,7 @@
+[toolchain]
+# 1.94.0 is a wire-format guarantee for this crate's rkyv archived types,
+# not just a build pin; re-run the layout goldens before bumping and
+# before any deploy that follows.
+channel = "1.94.0"
+targets = ["wasm32-unknown-unknown"]
+components = ["rust-src", "rustfmt", "cargo", "clippy"]

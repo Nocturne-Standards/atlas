@@ -1,0 +1,17 @@
+# cargo audit configuration. Run: cargo audit
+#
+# RUSTSEC-2026-0235 (rkyv: insufficient archive validation of Rc/Arc archives)
+# has no fix in the 0.7 series; the fix is 0.8.17 or later. Atlas types use
+# String, Option, u64, and fixed byte arrays, never Rc or Arc, and a grep of
+# dusk-core, piecrust-uplink, bls12_381-bls and dusk-forge finds none either.
+# rkyv decides by static type, so an attacker cannot introduce an Rc into a
+# type that has none. rkyv is an exact pin (=0.7.46) because the layout goldens
+# in crates/atlas-encoding/tests/layout_goldens.rs depend on it, and dusk-core
+# and piecrust-uplink require rkyv 0.7. Revisit when dusk-core moves to rkyv 0.8.
+#
+# RUSTSEC-2026-0001 (rkyv: Rc/Arc from_value on OOM) was fixed by moving from
+# 0.7.39 to 0.7.46 and is no longer ignored.
+[advisories]
+ignore = [
+    "RUSTSEC-2026-0235",
+]

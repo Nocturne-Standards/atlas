@@ -1,0 +1,59 @@
+---
+name: Bug report
+description: Report incorrect behaviour in the Atlas contract or its crates
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. **Do not** include secret keys or production
+        credentials. For undisclosed security issues use the contact in
+        SECURITY.md instead of a public issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      placeholder: What did you expect vs what actually happened?
+    validations:
+      required: true
+
+  - type: input
+    id: crate
+    attributes:
+      label: Crate / component
+      placeholder: e.g. atlas (contract), atlas-encoding, atlas-event-decoder, atlas-test-proxy, evm/src, evm/script, scripts/, docs
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or git commit
+      placeholder: e.g. 0.4.1 (testnet) or abc1234
+    validations:
+      required: false
+
+  - type: input
+    id: contract_id
+    attributes:
+      label: Atlas ContractId (if against a deployment)
+      placeholder: testnet id, if relevant
+    validations:
+      required: false
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: Host-side test, VM session, or transaction sequence; minimal input
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or output
+    validations:
+      required: false

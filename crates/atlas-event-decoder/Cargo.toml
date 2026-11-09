@@ -1,0 +1,25 @@
+[package]
+name = "nocturne-atlas-event-decoder"
+version = "0.3.0"
+description = "Host decoder for Atlas events. Dispatch is contract identity plus topic. Version comes from the deployment record."
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+atlas-encoding = { package = "nocturne-atlas-encoding", path = "../atlas-encoding", version = "0.5.0", features = ["data-driver"] }
+bytecheck = { version = "=0.6.12", default-features = false }
+rkyv = { version = "=0.7.46", default-features = false, features = ["size_32", "alloc", "validation"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+[dev-dependencies]
+dusk-core = { version = "=1.7.0", default-features = false }
+hex = "0.4"
+
+[lib]
+# Package is published as nocturne-atlas-event-decoder; the Rust path keeps the short name.
+name = "atlas_event_decoder"

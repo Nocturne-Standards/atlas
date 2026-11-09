@@ -1,0 +1,20 @@
+{
+  "name": "atlas-js",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Read-only JS reader for the Atlas registry contract, with a call-facts example",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=20.10"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js examples/call-facts/test/*.test.js"
+  },
+  "dependencies": {
+    "@dusk-network/networks": "0.4.0"
+  }
+}

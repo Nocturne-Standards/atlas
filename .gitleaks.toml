@@ -1,0 +1,8 @@
+title = "atlas"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "rkyv 0.7 archive goldens. rawKey193 is a layout fixture, not a credential."
+paths = ['''tools/atlas-js/test/fixtures/rkyv-goldens\.json''']

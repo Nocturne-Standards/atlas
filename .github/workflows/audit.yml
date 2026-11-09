@@ -1,0 +1,20 @@
+name: audit
+# CI runs cargo audit on push and pull requests. A new advisory against a
+# dependency that has not changed would otherwise go unnoticed until the next
+# push, so run it weekly too. Accepted advisories and why: .cargo/audit.toml.
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cargo-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        with:
+          toolchain: 1.94.0
+      - run: cargo install --locked cargo-audit --version 0.22.2
+      - run: cargo audit

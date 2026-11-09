@@ -1,0 +1,33 @@
+[package]
+name = "nocturne-atlas-encoding"
+version = "0.5.0"
+description = "Host-visible call types for the Atlas registry contract (rkyv layout-pinned)"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+# First crate published to crates.io (RELEASE-PENDING.md).
+publish = true
+
+[dependencies]
+dusk-core = { version = "=1.7.0", default-features = false }
+dusk-forge = { version = "0.3.0", optional = true }
+rkyv = { version = "=0.7.46", default-features = false, features = ["size_32", "alloc", "validation"] }
+bytecheck = { version = "=0.6.12", default-features = false }
+serde = { version = "1", default-features = false, features = ["derive"], optional = true }
+
+[features]
+default = []
+# serde derives on the call types (same name as the contract's feature)
+data-driver = ["dep:serde", "dusk-core/serde"]
+# ContractEvent topic impls for the contract macro; host consumers decoding events do not need it
+contract-events = ["dep:dusk-forge"]
+
+[dev-dependencies]
+rand = { version = "0.8.6", default-features = false }
+dusk-core = { version = "=1.7.0", features = ["zk"] }
+
+[lib]
+# Package is published as nocturne-atlas-encoding; the Rust path and the built file keep the short name.
+name = "atlas_encoding"
+crate-type = ["rlib"]

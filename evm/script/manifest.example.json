@@ -1,0 +1,15 @@
+{
+  "_comment": "Replace both values before broadcast. The address and the native id are fake.",
+  "services": [
+    {
+      "name": "evm.sound.oracle",
+      "kind": 1,
+      "address": "0x1111111111111111111111111111111111111111"
+    },
+    {
+      "name": "native.attested-nav",
+      "kind": 2,
+      "id": "0x2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ]
+}
