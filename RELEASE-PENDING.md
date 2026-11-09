@@ -1,7 +1,8 @@
 # Release pending
 
 Status: **`nocturne-atlas-encoding` 0.5.0 is published** (2026-11-09).
-`nocturne-atlas-event-decoder` 0.3.0 is next; `nocturne-atlas` and
+`nocturne-atlas-event-decoder` 0.3.0 is published, 0.3.1 adds its README;
+`nocturne-atlas` and
 `nocturne-atlas-test-proxy` stay `publish = false`. This file is the plan for the crates.io step and the list
 to decide on before it. Nothing here is a chain step; contract ids stay in
 `CHANGELOG.md` and the public deployments record.
@@ -11,7 +12,7 @@ to decide on before it. Nothing here is a chain step; contract ids stay in
 | Package | Version | Publish | Why |
 |---|---|---|---|
 | `nocturne-atlas-encoding` | 0.5.0 | **yes, first** | The only crate other code builds against. Consumers decode calls and events with it, and knot-warden / knot-warden-encoding need it: today they path-depend on a sibling Atlas checkout, so they cannot be published or built from a Knot commit alone until this crate is on crates.io (or Atlas is public and they pin a git `rev`). `no_std`, registry-only dependencies, layouts pinned by goldens. |
-| `nocturne-atlas-event-decoder` | 0.3.0 | **yes, second** | Host library for indexers. Its supported versions follow the records it can decode, through 0.6.0. Published after `nocturne-atlas-encoding`; it depends on that crate from the registry. |
+| `nocturne-atlas-event-decoder` | 0.3.1 | **yes, second** | Host library for indexers. Its supported versions follow the records it can decode, through 0.6.0. Published after `nocturne-atlas-encoding`; it depends on that crate from the registry. |
 | `nocturne-atlas` | 0.6.0 | **no** | The contract. It ships as WASM under a contract id, not as a library; consumers pin the id, and its build depends on the release profile and toolchain pin. Nothing would depend on the crate. |
 | `nocturne-atlas-test-proxy` | 0.3.0 | **no, never** | Test fixture. It forwards any call for anyone; deployed and named as guardian it would make Atlas writable by everyone. |
 

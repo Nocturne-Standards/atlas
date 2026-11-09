@@ -131,7 +131,7 @@ data contracts for the end-to-end tests. It needs network on a cold
 ## Versions and docs
 
 This tree is `atlas` 0.6.0, `atlas-encoding` 0.5.0 and `atlas-event-decoder`
-0.3.0. Each crate has its own semver; a release that changes bytecode or wire
+0.3.1. Each crate has its own semver; a release that changes bytecode or wire
 layout is marked `PINNED-DIFFERENT-REDEPLOYED` in the changelog, meaning it
 needs a new contract id.
 

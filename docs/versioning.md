@@ -11,7 +11,7 @@ Each workspace crate carries its own `version` in `Cargo.toml`:
 |---|---|---|---|
 | `nocturne-atlas-encoding` | `atlas_encoding` | 0.5.0 | crates.io, from 0.5.0 |
 | `nocturne-atlas` | `atlas`, `atlas.wasm` | 0.6.0 | never (`publish = false`, deployed as WASM) |
-| `nocturne-atlas-event-decoder` | `atlas_event_decoder` | 0.3.0 | crates.io (host library) |
+| `nocturne-atlas-event-decoder` | `atlas_event_decoder` | 0.3.1 | crates.io (host library) |
 | `nocturne-atlas-test-proxy` | `atlas_test_proxy`, `atlas_test_proxy.wasm` | 0.3.0 | never (`publish = false`, test fixture) |
 
 Packages are named `nocturne-atlas-*` (the same pattern as Knot's
