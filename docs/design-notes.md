@@ -66,7 +66,7 @@ calling could make the transfer contract call Atlas, and Atlas saw `caller ==
 transfer contract`, a direct call from the key. Atlas's argument decoding
 narrowed the reach to the argument-free calls (`cancel_pending`,
 `accept_guardian`) and to `set_timelock`, where only the cap stopped the forged
-value (section 8). From 0.5.0 Atlas reads the whole stack with
+value (section 8). From 0.6.0 Atlas reads the whole stack with
 `abi::callstack()`: the relay path is transfer → relaying contract → transfer,
 three frames, and is refused. The same rule covers the deploy owner in
 `init_guardian`. It costs one host query per authenticated call.
@@ -92,7 +92,7 @@ cannot act never takes the slot, and the outgoing guardian stays in force and
 cancels the stuck change. Acceptance applies the change at once if the delay has
 passed, so a delay-zero rotation is two calls: schedule, accept. 0.4.1 added no
 event for the acceptance, to keep `atlas-encoding` at 0.3.0, so observers had
-to poll `pending_accepted()`. 0.5.0 emits `guardian_accepted`
+to poll `pending_accepted()`. 0.6.0 emits `guardian_accepted`
 (`GuardianAccepted { guardian, execute_at }`, `atlas-encoding` 0.4.0), so the
 log alone shows who accepted and from when the change can apply.
 EvmAtlas `GuardianAccepted` carries the same height as `executeAt`.
@@ -112,7 +112,7 @@ Atlas itself never checks are a second product.
 Every other mutation emits the event for what it wrote. A zero-delay delay
 change emits `pending_scheduled` and then the applied event. A guardian change
 emits `pending_scheduled`, then `guardian_accepted` when the incoming guardian
-accepts (0.5.0 and later), then `guardian_set` once it has accepted and the
+accepts (0.6.0 and later), then `guardian_set` once it has accepted and the
 delay has passed. Payloads carry the whole
 new value so an indexer does not need a follow-up state read.
 `set_service` rejects an id already stored under that name, so a repeat does
@@ -143,14 +143,14 @@ delay on both chains uses the same cap as the directory on that chain.
 and a zero `Account::Contract` guardian, as EvmAtlas does for its zero
 locator and guardian. A key cannot be zero-checked, and no name can be
 removed. (`atlas-encoding` stayed at 0.3.0 for those; it moves to 0.4.0 with
-the `guardian_accepted` event in 0.5.0.)
+the `guardian_accepted` event in 0.6.0.)
 
 The cap has a second job on 0.4.1 and older. A contract that reaches Atlas
 through `contract_to_contract` (section 4) can make `set_timelock` decode a
 `u64` from the relay's own argument; that value is a pointer and length, always
 above 2^31, so `timelock above maximum` refuses it. Without the cap, such a
 relay could schedule a bogus delay change and occupy the single slot. From
-0.5.0 the call-depth test refuses the relay before decoding matters, and the
+0.6.0 the call-depth test refuses the relay before decoding matters, and the
 cap is back to guarding against unit mistakes.
 Older deployed instances keep their old acceptance rules; `CHANGELOG.md`
 lists what each version checks.

@@ -6,7 +6,7 @@
 //! `atlas-encoding` 0.3.0 event payloads with the same layout, except
 //! `pending_cancelled`: from [`PENDING_CANCELLED_EXECUTE_AT_SINCE`] (`atlas`
 //! 0.6.0, `atlas-encoding` 0.5.0) that payload also carries `execute_at`.
-//! 0.5.0 adds a sixth, `guardian_accepted` (`atlas-encoding` 0.4.0), which
+//! `guardian_accepted` (`atlas-encoding` 0.4.0) is the sixth payload. It
 //! decodes only for records from [`GUARDIAN_ACCEPTED_SINCE`] on; an older
 //! record never emitted it, so the topic is unknown there. A release that
 //! changes a layout needs its own decoder arm, and its version stays out of
@@ -33,14 +33,13 @@ pub const CONTRACT: &str = "atlas";
 /// (`fd2b8594031d56ae584301976e26f7348aaaea3a9900d2967201789f1b4e4ce9`).
 pub const DEPLOYMENT_VERSION: u32 = 4_001;
 
-/// Records this crate decodes: 0.3.1, 0.4.0, 0.4.1, 0.5.0, and 0.6.0.
-/// 0.5.0 keeps the five 0.3.0 payloads and adds `guardian_accepted`.
-/// 0.6.0 adds `execute_at` to `pending_cancelled`. 0.3.0 is absent: that
-/// deploy could not be initialised and was superseded.
-pub const SUPPORTED_VERSIONS: &[u32] = &[3_001, 4_000, 4_001, 5_000, 6_000];
+/// Records this crate decodes: 0.3.1, 0.4.0, 0.4.1 and 0.6.0.
+/// 0.6.0 adds `guardian_accepted` and `execute_at` on `pending_cancelled`.
+/// 0.3.0 is absent: that deploy could not be initialised and was superseded.
+pub const SUPPORTED_VERSIONS: &[u32] = &[3_001, 4_000, 4_001, 6_000];
 
-/// First record version that emits `guardian_accepted` (`atlas` 0.5.0).
-pub const GUARDIAN_ACCEPTED_SINCE: u32 = 5_000;
+/// First record version that emits `guardian_accepted` (`atlas` 0.6.0).
+pub const GUARDIAN_ACCEPTED_SINCE: u32 = 6_000;
 
 /// First record whose `pending_cancelled` carries `execute_at` (`atlas` 0.6.0).
 pub const PENDING_CANCELLED_EXECUTE_AT_SINCE: u32 = 6_000;
@@ -137,7 +136,7 @@ where
     })
 }
 
-/// `pending_cancelled` through atlas 0.5.0: the change, and no `execute_at`.
+/// `pending_cancelled` before atlas 0.6.0: the change, and no `execute_at`.
 /// The archived layout matches `atlas-encoding` 0.4.0.
 mod pending_cancelled_v4 {
     use atlas_encoding::call_types::PendingChange;

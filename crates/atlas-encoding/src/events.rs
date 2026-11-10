@@ -24,7 +24,7 @@ pub struct GuardianSet {
 /// `accept_guardian`. `guardian` is that account (the actor); `execute_at` is
 /// the height from which the change can apply. `guardian_set` follows when
 /// the change applies, in the same call if the delay has already passed.
-/// Added in `atlas-encoding` 0.4.0 / `atlas` 0.5.0.
+/// Added in `atlas-encoding` 0.4.0 / `atlas` 0.6.0.
 #[derive(Debug, Clone, PartialEq, Eq, Archive, Serialize, Deserialize)]
 #[archive_attr(derive(CheckBytes))]
 #[archive_attr(repr(C))]

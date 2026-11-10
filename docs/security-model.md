@@ -22,7 +22,7 @@ A direct account call has an empty call stack below Atlas (a bare session
 call) or exactly one frame, the genesis transfer contract: every Moonlight
 transaction arrives through that contract's `spend_and_execute`. Any other
 caller, or a deeper stack, is another contract using the key. The depth test is
-new in 0.5.0; 0.4.1 and older check only that `caller` is the transfer
+new in 0.6.0; 0.4.1 and older check only that `caller` is the transfer
 contract (see "A key that signs anything else" below).
 
 Atlas does not call the guardian. A contract guardian is trusted entirely for
@@ -158,7 +158,7 @@ same transaction until a `set_timelock` has been executed.
 
 `init_guardian` emits `guardian_set` and `timelock_set`. Other mutations emit the event
 for the write they performed. A zero-delay schedule emits `pending_scheduled`
-and then the applied event. From 0.5.0, `accept_guardian` emits
+and then the applied event. From 0.6.0, `accept_guardian` emits
 `guardian_accepted` with the accepting account and `execute_at`, followed by
 `guardian_set` when the change applies in the same call; 0.4.1 emits nothing on
 acceptance and `pending_accepted()` has to be read. Payloads carry the full new value. Monitoring
@@ -203,7 +203,7 @@ when a queued directory guardian change reaches the directory.
   other contracts on behalf of a Moonlight sender (`contract_to_contract`),
   and `public_sender` stays the original signer for the whole transaction. At
   the callee, `caller` is the transfer contract, as on a direct call.
-  - **0.5.0 and later:** an `External` account (guardian, incoming guardian,
+  - **0.6.0 and later:** an `External` account (guardian, incoming guardian,
     deploy owner) is accepted only when the call stack below Atlas is empty or
     is exactly the transfer contract. The relay path has three frames
     (transfer, the relaying contract, transfer) and is refused. Contract
@@ -235,7 +235,7 @@ when a queued directory guardian change reaches the directory.
   zero-id, reserved-id and key-validity checks, and `accept_guardian`, exist
   only from 0.4.1 on (deployed on testnet with knot-warden 0.2.1). The
   call-depth test for keys and the `guardian_accepted` event exist from
-  0.5.0 on. `pending_cancelled` carries `execute_at`, and `set_service`
+  0.6.0 on. `pending_cancelled` carries `execute_at`, and `set_service`
   rejects an unchanged id, from 0.6.0. Check which version you pin.
 
 ## DuskEVM

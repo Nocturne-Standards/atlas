@@ -1,8 +1,8 @@
 # Release pending
 
 Status: **`nocturne-atlas-encoding` 0.5.0 is published** (2026-11-09).
-`nocturne-atlas-event-decoder` 0.3.0 is published, 0.3.1 adds its README;
-`nocturne-atlas` and
+`nocturne-atlas-event-decoder` 0.3.0 and 0.3.1 are published. The tree is at
+0.4.0, which is not published yet. `nocturne-atlas` and
 `nocturne-atlas-test-proxy` stay `publish = false`. This file is the plan for the crates.io step and the list
 to decide on before it. Nothing here is a chain step; contract ids stay in
 `CHANGELOG.md` and the public deployments record.
@@ -38,22 +38,34 @@ to decide on before it. Nothing here is a chain step; contract ids stay in
       `nocturne-atlas-encoding` 0.5.0. It keeps every 0.4.0 and 0.3.0 layout
       and adds `execute_at` on `PendingCancelled`. Knot's publish prep already
       targets 0.5.
-- [ ] **Re-read** each `description` against the published API.
+- [x] **Re-read** each `description` against the published API. Encoding now
+      says it carries event payloads too. Decoder dispatches on the deployments
+      key, as its README says.
 
 ## Flip at publish time
 
 - [x] Set `publish = true` only on the crates being published, in the order
-      above. Done for `nocturne-atlas-encoding`.
-- [ ] Every dependency has a registry `version` (no `git`). `atlas-encoding`
-      depends on `dusk-core =1.7.0`, `rkyv =0.7.46`, `bytecheck =0.6.12`,
-      optional `dusk-forge 0.3.0` and `serde 1`: all on crates.io.
+      above. Done for both published crates; `nocturne-atlas` and
+      `nocturne-atlas-test-proxy` stay `false`.
+- [x] Every dependency has a registry `version` (no `git`, no bare `path`).
+      `atlas-encoding` depends on `dusk-core =1.7.0`, `rkyv =0.7.46`,
+      `bytecheck =0.6.12`, optional `dusk-forge 0.3.0` and `serde 1`. The
+      decoder's `atlas-encoding` entry has a `path` and a `version`, so the
+      registry copy is used on publish.
 - [x] Copy `LICENSE` (Apache-2.0) and `NOTICE` into each published crate
-      directory. Done for `nocturne-atlas-encoding`.
+      directory. Done for both published crates.
 - [x] `cargo package -p <crate>` and inspect the file list before the
       first publish. `nocturne-atlas-encoding` 0.5.0 verifies (2026-11-09); the name was free on crates.io.
-- [ ] Date the `CHANGELOG.md` section for the versions that ship.
-- [ ] README and `docs/versioning.md`: replace the git `rev` pin with the
-      crates.io line.
+- [ ] Decoder 0.4.0 publish. It removes a version from `SUPPORTED_VERSIONS`, which
+      is a breaking change, so it cannot ship as 0.3.x. Run `cargo publish -p
+      nocturne-atlas-event-decoder` after the tests pass; that step also
+      verifies the package.
+- [x] Date the `CHANGELOG.md` section for the versions that ship. `[0.6.0]`
+      is dated 2026-11-09, the date of tag `v0.6.0`. `[Unreleased]` holds what
+      came after it.
+- [x] README, `docs/versioning.md`, `docs/consumers.md` and
+      `crates/atlas/README.md`: no git `rev` pin left. All name the crates.io
+      line.
 
 ## Still true after publishing
 

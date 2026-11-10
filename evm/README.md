@@ -1,12 +1,8 @@
 # EvmAtlas
 
 Per-chain directory for DuskEVM. One deployment per chain id. First target is
-chain 745. Deployed on DuskEVM testnet on 2026-10-28 (redeployed from
-`b22f6e7`; the first pair from 2026-10-20 is history): EvmAtlas 0.4.1
-`0x152a7238426B403057aB2c7F2Bbe0B52EF694D90` and EvmWarden 0.4.1
-`0x83966e7E879B05f660fab01e09B911651Be4Ef1D`. The warden is the directory's
-guardian, its scheduler is the deployer address, and both delays are 150
-blocks. Testnet only, not audited yet.
+chain 745. The warden is the directory's guardian. Testnet only, not audited
+yet.
 
 Native Atlas is unchanged. Piecrust books keep calling native `resolve`. This
 contract is not a mirror of that map. It stores locators.
@@ -83,13 +79,11 @@ above the cap.
 A repoint waits at least the warden delay. A guardian change waits the warden
 delay plus the directory timelock. The warden keeps the directory timelock at
 or above its own delay (`T >= D`); to raise both, raise the timelock first.
-`deploy.sh` checks the first pair. The 0.4.1 pair on testnet predates the
-warden-side check. Admin kind 3 is `ADMIN_ATLAS_GUARDIAN`; `executeAdmin` emits
+`deploy.sh` checks the pair at deploy time. Admin kind 3 is `ADMIN_ATLAS_GUARDIAN`; `executeAdmin` emits
 `AtlasGuardianForwarded` before it calls the directory `setGuardian`.
 
-Testnet delay that matches about 5 minutes on DuskEVM: 150 blocks for both
-the warden delay and the directory timelock. The 0.4.1 release uses these
-low values; mainnet delays are a separate decision.
+Testnet delays are 150 blocks for both the warden delay and the directory
+timelock, about 5 minutes on DuskEVM. Mainnet delays are a separate decision.
 
 ## Scripts
 

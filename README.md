@@ -11,40 +11,6 @@ kernel for DuskEVM.
 
 > **Testnet only. Not audited.** Do not put value behind it.
 
-## Deployments
-
-Live ids are published in
-[Nocturne-Standards/nocturne-deployments](https://github.com/Nocturne-Standards/nocturne-deployments)
-(`contracts.atlas`). Older versions are history; their ids are in
-[`CHANGELOG.md`](CHANGELOG.md).
-
-| | Atlas | Guardian | Delay |
-|---|---|---|---|
-| **Dusk testnet** | v0.4.1 | knot-warden 0.2.1 | 30 blocks |
-| **DuskEVM testnet** (chain 745) | EvmAtlas 0.4.1 | EvmWarden 0.4.1 | 150 blocks (about 5 minutes) |
-
-<details>
-<summary>Ids and hashes</summary>
-
-Dusk testnet:
-
-- Atlas v0.4.1: `fd2b8594031d56ae584301976e26f7348aaaea3a9900d2967201789f1b4e4ce9`
-  (tx `743432a6ab77bc2b34246b7deea5b9326f1d77c2feb659e27485fe903573633c`,
-  `wasm_sha256` `cf259587c7a7013516921a4e8c71ef7ce99bc835793b10daed0ba1c46667e6a7`)
-- knot-warden 0.2.1: `9222e9995febf7fed02a0910a58f7c4190e0f388653ddc8b0d12bb4ef944f607`
-  (`wasm_sha256` `abf1a0d72ed8c294e5486183ed1e2768ce32adf8c0b39740d529f08a7476f10d`)
-
-DuskEVM testnet:
-
-- EvmAtlas 0.4.1: `0x152a7238426B403057aB2c7F2Bbe0B52EF694D90`
-- EvmWarden 0.4.1: `0x83966e7E879B05f660fab01e09B911651Be4Ef1D`
-  (its scheduler is the deployer address)
-
-Product instances such as `prediction-market-atlas` stay on their own pinned
-version until their operator re-pins.
-
-</details>
-
 ## Use it from Rust
 
 Add the call types and event payloads:
@@ -55,8 +21,8 @@ atlas-encoding = { package = "nocturne-atlas-encoding", version = "0.5" }
 
 Then:
 
-1. Take the Atlas id from the deployments record. Do not copy it from a blog
-   post or a chat.
+1. Take the Atlas id from the public deployments record for the network you
+   target. Do not copy it from a blog post or a chat.
 2. Check it on chain: read `guardian()` and `timelock_blocks()` on that id, and
    `atlas()` on the warden.
 3. Bake the id into your contract at build time. Set `ATLAS_PIN_HEX` (64 hex
@@ -67,7 +33,8 @@ Then:
 
 A crate version is not a contract id: the id from step 1 is what you trust.
 The full guide, with a tested `build.rs` and the checks to run before trusting
-an id, is [`docs/consumers.md`](docs/consumers.md).
+an id, is [`docs/consumers.md`](docs/consumers.md). Release history, with the
+ids each version was deployed under, is in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## What Atlas exposes
 
