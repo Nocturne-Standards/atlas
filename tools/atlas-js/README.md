@@ -32,7 +32,7 @@ The rkyv 0.7 (`size_32`) layouts of `String`, `Option<ContractId>`, `Option<Acco
 ## Staying in step with the contract
 
 - `test/goldens-match-rust.test.js` reads `crates/atlas-encoding/tests/layout_goldens.rs` and fails when `test/fixtures/rkyv-goldens.json` stops matching it. Rust is the source of truth. CI runs this test, so a layout change in `atlas-encoding` cannot merge without the JS side.
-- The read layouts come from `atlas-encoding`'s `call_types.rs`, which has not changed since 0.3.1. Atlas 0.5.0 and 0.6.0 changed events (`guardian_accepted`, `pending_cancelled.execute_at`) and `set_service` behaviour (`service unchanged`), not the read arguments or replies. So one layout covers the 0.4.1 deployment and the 0.6.0 source.
+- The read layouts come from `atlas-encoding`'s `call_types.rs`, which has not changed since 0.3.1. Atlas 0.6.0 changed events (`guardian_accepted`, `pending_cancelled.execute_at`) and `set_service` behaviour (`service unchanged`), not the read arguments or replies. So one layout covers the 0.4.1 deployment and the 0.6.0 source.
 - Checked against a live node: testnet (chain 2, Rusk 1.7.3) running Atlas 0.4.1 on 2026-11-08. `guardian`, `timelock_blocks`, `pending` and `resolve` of an unknown name decoded to the values the root README records. Not checked live: Atlas 0.6.0, which is not deployed, `resolve` of a name that is set, a non-empty `pending`, and `pendingAccepted`. The 0.6.0 reads are covered by the goldens only.
 - Replies are assumed to be exactly the root archive, with no framing. A node that adds framing breaks every read, loudly: a short or malformed reply throws.
 - `/on/node/info` needs POST on a Dusk node, not GET.

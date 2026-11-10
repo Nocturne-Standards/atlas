@@ -7,9 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### atlas 0.6.0 / atlas-encoding 0.5.0 / atlas-event-decoder 0.3.1
-
 - `atlas-event-decoder` 0.3.1 adds a README and `readme` metadata to the crate. No code change from 0.3.0, which is on crates.io without a README.
+- `nocturne-atlas-encoding` 0.5.0 and `nocturne-atlas-event-decoder` 0.3.0 and 0.3.1 are on crates.io. `nocturne-atlas` and `nocturne-atlas-test-proxy` stay unpublished.
+- `nocturne-atlas-event-decoder` 0.4.0: `SUPPORTED_VERSIONS` drops one record version. `guardian_accepted` decodes from 6000 on (`GUARDIAN_ACCEPTED_SINCE`). Breaking change, hence the minor bump.
+- `README.md` and `evm/README.md` no longer list live deployments. The public deployments record is the source for live ids; this file keeps the history.
+
+## [0.6.0] — 2026-11-09 · PINNED-DIFFERENT-REDEPLOYED
+
+Tag `v0.6.0`: `atlas` 0.6.0, `atlas-encoding` 0.5.0, `atlas-event-decoder` 0.3.0, `atlas-test-proxy` 0.3.0.
+
+### atlas 0.6.0 / atlas-encoding 0.5.0 / atlas-event-decoder 0.3.0
 
 - `pending_cancelled` carries `execute_at`, the height the withdrawn change would have applied at. The 0.4.0 encoding payload was the change only. The decoder keeps that older layout for records before 0.6.0.
 - `set_service` panics `service unchanged` when the name already stores that id, and does not emit. A different id under the same name still updates.
@@ -17,40 +24,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EvmAtlas `GuardianAccepted` carries `executeAt`, matching native `guardian_accepted`.
 - The security model states the current source: one guardian slot, and `T >= D` enforced by the warden (EvmWarden and knot-warden), not by Atlas.
 
-Two groups. The first is the next contract version (`atlas` 0.5.0,
-`atlas-encoding` 0.4.0, `atlas-event-decoder` 0.2.0, `atlas-test-proxy`
-0.3.0): new bytecode, not deployed, so it is **PINNED-DIFFERENT-REDEPLOYED**
-once deployed under a new id. The second group is not tagged yet either, but
-the 0.4.1 testnet deployments were built from commits that already include it.
-
-### Next version: changed (native)
+### changed (native)
 
 - An `Account::External` guardian, incoming guardian or deploy owner is accepted only on a direct call: the call stack below Atlas is empty (a bare session) or exactly the genesis transfer contract (a Moonlight transaction). Until now `caller == transfer contract` was enough, and the transfer contract's `contract_to_contract` lets any contract make the transfer contract call Atlas inside a transaction the key signed, with `public_sender` still the key. That reached the argument-free calls (`cancel_pending`, `accept_guardian`) and, blocked only by the timelock cap, `set_timelock`. The stack in that case is transfer → contract → transfer, so the depth check refuses it. Applies to every `External`-authorised entry point: guardian methods, `accept_guardian`, and `init_guardian`. `Account::Contract` is unchanged (`caller == id` at any depth). One extra host query per authenticated call.
 - `cancel_pending`'s doc comment now says what the code does: cancel is allowed at any time, also after `execute_at`, until the change is applied; at `execute_at` cancel and execute race and transaction order decides.
 
-### Next version: added (native)
+### added (native)
 
 - `accept_guardian` emits `guardian_accepted` with `GuardianAccepted { guardian, execute_at }`: the account that accepted, and the height from which the change can apply. `guardian_set` follows when the change applies (in the same call if the delay has passed). `pending_accepted()` no longer has to be polled. New type in `atlas-encoding` 0.4.0 with layout goldens; the existing payloads are unchanged.
-- `atlas-event-decoder` 0.2.0 decodes `guardian_accepted` for records from 0.5.0 on (`GUARDIAN_ACCEPTED_SINCE`); for older records the topic is unknown. `DEPLOYMENT_VERSION` is now 0.4.1, the current record.
+- `atlas-event-decoder` 0.2.0 decodes `guardian_accepted` for records from 0.6.0 on (`GUARDIAN_ACCEPTED_SINCE`); for older records the topic is unknown. `DEPLOYMENT_VERSION` is now 0.4.1, the current record.
 - `atlas-test-proxy` 0.3.0: `relay(target, fn_name, data)` forwards raw call bytes, so the VM tests rebuild the `contract_to_contract` call stack with the proxy at the transfer contract id. Tests: a relayed `cancel_pending`, `set_service`, `set_timelock`, `accept_guardian` and `init_guardian` are refused for keys; the same calls through one transfer-contract frame work; a contract guardian works through the transfer contract. Its README says never to deploy it.
 
-### Next version: changed (DuskEVM)
+### changed (DuskEVM)
 
 - EvmWarden keeps the directory timelock at or above its own delay (`T >= D`), from both sides: `setTimelock` reverts `TimelockBelowDelay` below the warden delay or a delay raise queued in the warden, and, while the warden is the directory's guardian, `setDelay` reverts `DelayAboveTimelock` above the directory timelock or a lower timelock the directory has pending. Raising both now means raising the timelock first. `IEvmAtlas` gains `timelockBlocks()`. Why here and not in the directory: the two values live in two contracts that change independently, and the warden is the one place that sees both and writes the directory's timelock. A check in EvmAtlas or native Atlas would have to call the guardian, which the directory never does, and could not stop the guardian's own delay from rising later. The first pair is still the deploy's job: `deploy.sh` refuses `ATLAS_TIMELOCK_BLOCKS < ATLAS_WARDEN_DELAY` and checks both values on chain. On native, Atlas cannot see a warden's delay; until knot-warden refuses the same, `T >= D` there is a deploy-time setting (see `docs/security-model.md`).
 - `evm/script/deploy.sh` checks the warden before every `initGuardian` (code present, `atlas()`, `chainId()`, `scheduler()`, `delayBlocks()` match this run), on resume and on a fresh deploy. `initGuardian` has no acceptance step, so a mistyped `ATLAS_WARDEN` on resume used to become the directory's guardian for good before `verify_pair` noticed. `deploy_resume_test.sh` covers each mismatch.
 
-### Next version: documentation
+### documentation
 
 - `docs/security-model.md`, `docs/design-notes.md`, `docs/consumers.md`, README: the direct-call rule now names the call-stack test, and what 0.4.1 still allows through `contract_to_contract` (`cancel_pending`, `accept_guardian`, and `set_timelock` stopped only by the cap); `T >= D` is described as a deploy-time setting on native and as enforced by the EvmWarden in this tree; cancel after `execute_at` and its race with execute; the deploy owner must be the BLS key that calls `init_guardian`; `guardian_accepted` in the event tables.
-- `evm/README.md` gives the 2026-10-28 redeploy date for the current pair. The 0.4.1 entries below say which WASM size is the deployed artifact, and the 0.3.1 entry says the later warden id in the deployments record is wrong.
+- The 0.4.1 entries below say which WASM size is the deployed artifact, and the 0.3.1 entry says the later warden id in the deployments record is wrong.
 
-### Next version: repository
+### repository
 
 - `tools/atlas-js`: a read-only JS reader for Atlas (`resolve`, `guardian`, `timelock_blocks`, `pending`, `pending_accepted`) and a `callFacts` example for wallet activity. Its tests read `crates/atlas-encoding/tests/layout_goldens.rs` and fail when the JS layouts drift; a `js` CI job runs them. Checked live against the 0.4.1 testnet deployment; the read layouts have not changed since 0.3.1, so 0.6.0 is covered by the goldens. Not part of the Rust workspace.
 - `scripts/check-public-surface.sh` and a `kit-gates` workflow: a leak gate over the tracked tree (credentials, private key blocks, local paths, private names and paths, unresolved markers). `.nocturne-public` marks the repository as public-tier. `.public-surface-allowlist` drops stale entries.
 - `.gitignore` covers local agent and editor state and `.env*`. `CODEOWNERS` names `@ichbindas`.
-- Every crate is `publish = false` until the crates.io step; `RELEASE-PENDING.md` lists each crate with a publish recommendation and the order (`atlas-encoding` first).
-- Packages renamed to `nocturne-atlas-encoding`, `nocturne-atlas-event-decoder`, `nocturne-atlas` and `nocturne-atlas-test-proxy` (the crates.io pattern Knot uses). `[lib] name` keeps the Rust paths (`atlas_encoding`, ...) and the WASM file names (`atlas.wasm`, `atlas_test_proxy.wasm`); the crate Makefiles take the WASM name from the lib target. Consumers write `atlas-encoding = { package = "nocturne-atlas-encoding", ... }`; cargo `-p` flags use the new names. The package name feeds Cargo's symbol hashing, so the release WASM differs from a build of the previous commit; 0.5.0 is not deployed, so no recorded hash changes.
+- Every crate is `publish = false` until the crates.io step (`atlas-encoding` first).
+- Packages renamed to `nocturne-atlas-encoding`, `nocturne-atlas-event-decoder`, `nocturne-atlas` and `nocturne-atlas-test-proxy` (the crates.io pattern Knot uses). `[lib] name` keeps the Rust paths (`atlas_encoding`, ...) and the WASM file names (`atlas.wasm`, `atlas_test_proxy.wasm`); the crate Makefiles take the WASM name from the lib target. Consumers write `atlas-encoding = { package = "nocturne-atlas-encoding", ... }`; cargo `-p` flags use the new names. The package name feeds Cargo's symbol hashing, so the release WASM differs from a build of the previous commit; it is not deployed, so no recorded hash changes.
+
+## [0.4.1] — 2026-10-20 · PINNED-DIFFERENT-REDEPLOYED
 
 ### Already in the 0.4.1 deployments: added
 
@@ -68,8 +71,6 @@ the 0.4.1 testnet deployments were built from commits that already include it.
 - DuskEVM checked against the testnet RPC (chain 745, 2026-10-20): exactly 2.000 s blocks, opcodes through Cancun accepted (Osaka `CLZ` refused), and `unaliasedSender` equals Dusk's SDK mapping (`duskContractIdToEvmAddress`). New read-only `evm/script/chain-check.sh` repeats the chain id, block-time and opcode checks. The build stays on `paris`.
 - Release build: `cargo build --locked`; `make release-wasm` requires rustc 1.94.0 and ignores `RUSTFLAGS`, `CARGO_ENCODED_RUSTFLAGS` and `CARGO_PROFILE_*`; the CI job runs the VM tests against the optimised artifact, fails when the build fails (pipefail), and uploads `SHA256SUMS` and `BUILD.txt` with the WASM; `release-wasm-docker.sh` pins its image by digest and re-hashes on the host. A weekly `cargo audit` workflow.
 - EvmWarden: `setGuardian` reverts `NotDirectoryGuardian` when the warden is not the directory guardian and `DirectoryChangePending` when the directory holds a pending change; `setTimelock` reverts `GuardianChangeQueued` while a directory guardian change is queued. The forward in `executeAdmin` can no longer revert and leave the single admin slot occupied. `IEvmAtlas` gains `pending()`.
-
-## [0.4.1] — 2026-10-20 · PINNED-DIFFERENT-REDEPLOYED
 
 ### Changed
 
@@ -226,6 +227,6 @@ History. Superseded by 0.4.1; new pins use 0.4.1.
 
 - Initial testnet deploy (Operator, `init_proposals`, `"treasury"` → logic). Smoke: `set_constant("smoke_bps", 42)`.
 
-<!-- No compare links: the public repository starts from a single commit and its
-     first tag will be v0.5.0, so tags for the versions above do not exist there.
-     On the v0.5.0 release, add: [0.5.0]: https://github.com/Nocturne-Standards/atlas/releases/tag/v0.5.0 -->
+<!-- No compare links: the public repository's first tag is v0.6.0, so tags for
+     the versions above do not exist there. Add a compare link when the next
+     version is tagged. -->

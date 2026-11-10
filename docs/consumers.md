@@ -103,7 +103,7 @@ choose: 0.5.x needs `dusk-core =1.7.0`. Knot's encoding crate,
 An `External` guardian or scheduler is a key. Use a dedicated key that signs
 nothing else, or a contract account, which is preferred. The genesis transfer
 contract can call other contracts for a Moonlight sender
-(`contract_to_contract`), and the signer stays `public_sender`. Atlas 0.5.0
+(`contract_to_contract`), and the signer stays `public_sender`. Atlas 0.6.0
 accepts a key only when the transfer contract is the one frame below it, so
 that relay is refused. Atlas 0.4.1 (on testnet) and knot-warden 0.2.1 check
 only that `caller` is the transfer contract, so a malicious contract the key is

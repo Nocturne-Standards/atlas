@@ -6,7 +6,7 @@ explorers. It turns the rkyv payload of a named event from
 into a `serde_json::Value`.
 
 ```toml
-atlas-event-decoder = { package = "nocturne-atlas-event-decoder", version = "0.3" }
+atlas-event-decoder = { package = "nocturne-atlas-event-decoder", version = "0.4" }
 ```
 
 ```rust
@@ -19,14 +19,14 @@ let json = decode("atlas", "guardian_set", DEPLOYMENT_VERSION, &bytes)?;
 
 ## What it decodes
 
-Atlas records 0.3.1, 0.4.0, 0.4.1, 0.5.0 and 0.6.0 (`SUPPORTED_VERSIONS`). Older
+Atlas records 0.3.1, 0.4.0, 0.4.1 and 0.6.0 (`SUPPORTED_VERSIONS`). Older
 records are not decoded. Topics:
 
 | Topic | Records |
 |---|---|
 | `guardian_set`, `service_updated`, `timelock_set`, `pending_scheduled` | all supported |
 | `pending_cancelled` | all supported; from 0.6.0 the payload also carries `execute_at` |
-| `guardian_accepted` | from 0.5.0 on; an older record never emitted it, so the topic is unknown there |
+| `guardian_accepted` | from 0.6.0 on; an older record never emitted it, so the topic is unknown there |
 
 Errors are `DecodeError`: unknown contract, unsupported version, unknown topic,
 or a payload that does not match the topic.

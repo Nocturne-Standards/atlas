@@ -1,12 +1,12 @@
 [package]
 name = "nocturne-atlas-encoding"
 version = "0.5.0"
-description = "Host-visible call types for the Atlas registry contract (rkyv layout-pinned)"
+description = "Host-visible call types and event payloads for the Atlas registry contract (rkyv layout-pinned)"
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
-# First crate published to crates.io (RELEASE-PENDING.md).
+# First crate published to crates.io.
 publish = true
 
 [dependencies]
