@@ -39,10 +39,16 @@ knot-wasm: ## Clone knot @ KNOT_REV and build registry, proposals and their data
 	@$(MAKE) -C "$(KNOT_SRC)/crates/knot-registry-data" wasm ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN)
 	@$(MAKE) -C "$(KNOT_SRC)/crates/knot-proposals-data" wasm ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN)
 
+.PHONY: example-wasm
+example-wasm: ## Build the counter and front-door example WASM
+	@$(MAKE) -C crates/atlas-example-counter wasm
+	@$(MAKE) -C crates/atlas-example-front wasm ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN)
+
 .PHONY: wasm
-wasm: ## Build atlas + atlas-test-proxy contract WASM
+wasm: ## Build atlas + atlas-test-proxy + example consumer contract WASM
 	@$(MAKE) -C crates/atlas wasm
 	@$(MAKE) -C crates/atlas-test-proxy wasm
+	@$(MAKE) example-wasm
 
 # Deployed bytecode: clean build, wasm-opt required at the pinned version. The
 # hash printed here is what `wasm_sha256` in the deployments record must match.
@@ -64,12 +70,12 @@ release-wasm: ## Build atlas.wasm for deploy (wasm-opt required, clean build) an
 .PHONY: test
 test: wasm knot-wasm ## Build WASM then cargo test --workspace --release
 	@test -f "$(KNOT_REGISTRY_WASM)" && test -f "$(KNOT_PROPOSALS_WASM)" && test -f "$(KNOT_REGISTRY_DATA_WASM)" && test -f "$(KNOT_PROPOSALS_DATA_WASM)"
-	@cargo test --workspace --release
+	@ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN) cargo test --workspace --release
 
 .PHONY: clippy
 clippy: wasm knot-wasm ## Workspace clippy then wasm-target clippy for contracts
 	@test -f "$(KNOT_REGISTRY_WASM)" && test -f "$(KNOT_PROPOSALS_WASM)" && test -f "$(KNOT_REGISTRY_DATA_WASM)" && test -f "$(KNOT_PROPOSALS_DATA_WASM)"
-	@cargo clippy --workspace --all-targets --release -- -D warnings
+	@ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN) cargo clippy --workspace --all-targets --release -- -D warnings
 	@$(MAKE) -C crates/atlas clippy
 	@$(MAKE) -C crates/atlas-test-proxy clippy
 
