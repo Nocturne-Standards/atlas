@@ -70,12 +70,12 @@ release-wasm: ## Build atlas.wasm for deploy (wasm-opt required, clean build) an
 .PHONY: test
 test: wasm knot-wasm ## Build WASM then cargo test --workspace --release
 	@test -f "$(KNOT_REGISTRY_WASM)" && test -f "$(KNOT_PROPOSALS_WASM)" && test -f "$(KNOT_REGISTRY_DATA_WASM)" && test -f "$(KNOT_PROPOSALS_DATA_WASM)"
-	@cargo test --workspace --release
+	@ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN) cargo test --workspace --release
 
 .PHONY: clippy
 clippy: wasm knot-wasm ## Workspace clippy then wasm-target clippy for contracts
 	@test -f "$(KNOT_REGISTRY_WASM)" && test -f "$(KNOT_PROPOSALS_WASM)" && test -f "$(KNOT_REGISTRY_DATA_WASM)" && test -f "$(KNOT_PROPOSALS_DATA_WASM)"
-	@cargo clippy --workspace --all-targets --release -- -D warnings
+	@ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN) cargo clippy --workspace --all-targets --release -- -D warnings
 	@$(MAKE) -C crates/atlas clippy
 	@$(MAKE) -C crates/atlas-test-proxy clippy
 
