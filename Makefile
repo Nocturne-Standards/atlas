@@ -39,12 +39,16 @@ knot-wasm: ## Clone knot @ KNOT_REV and build registry, proposals and their data
 	@$(MAKE) -C "$(KNOT_SRC)/crates/knot-registry-data" wasm ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN)
 	@$(MAKE) -C "$(KNOT_SRC)/crates/knot-proposals-data" wasm ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN)
 
+.PHONY: example-wasm
+example-wasm: ## Build the counter and front-door example WASM
+	@$(MAKE) -C crates/atlas-example-counter wasm
+	@$(MAKE) -C crates/atlas-example-front wasm ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN)
+
 .PHONY: wasm
 wasm: ## Build atlas + atlas-test-proxy + example consumer contract WASM
 	@$(MAKE) -C crates/atlas wasm
 	@$(MAKE) -C crates/atlas-test-proxy wasm
-	@$(MAKE) -C crates/atlas-example-counter wasm
-	@$(MAKE) -C crates/atlas-example-front wasm ATLAS_PIN_HEX=$(KNOT_E2E_ATLAS_PIN)
+	@$(MAKE) example-wasm
 
 # Deployed bytecode: clean build, wasm-opt required at the pinned version. The
 # hash printed here is what `wasm_sha256` in the deployments record must match.

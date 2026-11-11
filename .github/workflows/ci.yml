@@ -89,6 +89,7 @@ jobs:
           wasm=target/contract/wasm32-unknown-unknown/release/atlas.wasm
           before="$(sha256sum "$wasm" | cut -d' ' -f1)"
           make -C crates/atlas-test-proxy wasm
+          make example-wasm
           make knot-wasm
           cargo test --release --locked -p nocturne-atlas
           after="$(sha256sum "$wasm" | cut -d' ' -f1)"
