@@ -125,7 +125,10 @@ fn example_front_door_re_resolves_after_repoint() {
         .call::<(), u64>(FRONT_ID, "value", &(), POINT_LIMIT)
         .expect("front value")
         .data;
-    assert_eq!(via_front, 1, "front should read counter A after first increment");
+    assert_eq!(
+        via_front, 1,
+        "front should read counter A after first increment"
+    );
 
     let _: (ContractId, Option<CallReceipt<()>>) = session
         .deploy(
