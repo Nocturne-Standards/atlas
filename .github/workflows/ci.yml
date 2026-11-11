@@ -15,8 +15,22 @@ jobs:
           toolchain: 1.94.0
           targets: wasm32-unknown-unknown
           components: "rustfmt, clippy, rust-src"
-      - name: Install jq, ripgrep, python3
-        run: sudo apt-get update && sudo apt-get install -y jq ripgrep python3
+      - name: Install jq, python3, ripgrep
+        # jq and python3 are already on the runner. ripgrep is not, and the
+        # Ubuntu mirror has failed to resolve twice on this job. Take rg from
+        # the pinned release tarball instead.
+        run: |
+          sudo apt-get update || true
+          sudo apt-get install -y jq python3
+          if ! command -v rg >/dev/null 2>&1; then
+            curl -sSfL -o ripgrep.tar.gz https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz
+            echo "4cf9f2741e6c465ffdb7c26f38056a59e2a2544b51f7cc128ef28337eeae4d8e  ripgrep.tar.gz" | sha256sum -c -
+            tar -xzf ripgrep.tar.gz
+            sudo install -m 755 ripgrep-14.1.1-x86_64-unknown-linux-musl/rg /usr/local/bin/rg
+          fi
+          command -v jq
+          command -v python3
+          command -v rg
       - run: cargo fmt --all --check
       # Contract WASM first: host tests include_bytes! the artifacts, and
       # `make knot-wasm` clones public Nocturne-Standards/knot at the
