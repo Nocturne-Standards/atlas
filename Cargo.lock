@@ -1689,6 +1689,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "nocturne-atlas-example-counter"
+version = "0.1.0"
+dependencies = [
+ "dusk-core",
+ "dusk-forge",
+]
+
+[[package]]
+name = "nocturne-atlas-example-front"
+version = "0.1.0"
+dependencies = [
+ "dusk-core",
+ "dusk-forge",
+]
+
+[[package]]
 name = "nocturne-atlas-test-proxy"
 version = "0.3.0"
 dependencies = [

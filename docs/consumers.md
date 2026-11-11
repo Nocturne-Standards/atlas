@@ -4,6 +4,24 @@ Atlas is never upgraded. A consumer bakes the `ContractId` of one Atlas
 deployment into its own build and calls `resolve(name)` at runtime. This page
 is what to do, and what to check, before trusting an id.
 
+## Deploy your own
+
+The workspace ships a minimal pair you can copy:
+
+- **`crates/atlas-example-counter`** — a `u64` counter (`increment` /
+  `value`). It does not call Atlas.
+- **`crates/atlas-example-front`** — bakes an Atlas id with `ATLAS_PIN_HEX`
+  (see `build.rs`), resolves the name `"counter"`, and cross-calls the logic
+  contract on every `increment` and `value`.
+- **`crates/atlas/tests/e2e_example_consumer.rs`** — deploys Atlas under a fixed
+  lab id, registers counter A, runs the front door, repoints `"counter"` to
+  counter B, and checks that the front door asked Atlas again (B is 1, A stays
+  1). Build the WASM with `make wasm` (front needs `ATLAS_PIN_HEX` matching the
+  test’s Atlas id).
+
+Those crates are `publish = false` (not on crates.io); CI builds their WASM via
+the root `Makefile` and the host test `include_bytes!` the artifacts.
+
 ## Bake the id
 
 Set `ATLAS_PIN_HEX` to the 64 hex digits of the Atlas `ContractId` and let a

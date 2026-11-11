@@ -1,6 +1,13 @@
 [workspace]
 resolver = "2"
-members = ["crates/atlas-encoding", "crates/atlas", "crates/atlas-test-proxy", "crates/atlas-event-decoder"]
+members = [
+    "crates/atlas-encoding",
+    "crates/atlas",
+    "crates/atlas-test-proxy",
+    "crates/atlas-event-decoder",
+    "crates/atlas-example-counter",
+    "crates/atlas-example-front",
+]
 
 [workspace.package]
 edition = "2024"
